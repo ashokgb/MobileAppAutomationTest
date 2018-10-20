@@ -3,6 +3,7 @@ package com.mytaxi.android_demo;
 import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
@@ -33,7 +34,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -53,11 +53,12 @@ public class SearchDriverTest {
     @Before
     public void setActivity() {
         mActivity = mActivityRule.getActivity();
+        IdlingRegistry.getInstance().register(ForIdlingRegistry.getResource());
     }
 
     @Test
     public void testLogin() throws InterruptedException {
-        Log.d("@Test","Performing login success test");
+        Log.d("@Test", "Performing login success test");
 
         mActivityTestRule.launchActivity(new Intent());
 
@@ -70,7 +71,7 @@ public class SearchDriverTest {
 
         Thread.sleep(2000);
         onView(allOf(withId(R.id.textSearch), isDisplayed()))
-                .perform(typeText("sa"),closeSoftKeyboard());
+                .perform(typeText("sa"), closeSoftKeyboard());
         onView(withText("Sarah Scott"))
                 .inRoot(withDecorView(not(is(mActivity.getWindow().getDecorView()))))
                 .perform(click());
